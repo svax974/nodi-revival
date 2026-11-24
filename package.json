@@ -12,11 +12,12 @@
   ],
   "scripts": {
     "build": "npm run build -w @nodi/sdk && npm run build -w @nodi/api && npm run build -w @nodi/control-ui",
-    "check": "npm run test && npm run build && npm run docs:check && npm run manifests:check",
+    "check": "npm run test && npm run build && npm run docs:check && npm run manifests:check && npm run scripts:check",
     "dev": "npm run dev -w @nodi/api",
     "dev:ui": "npm run dev -w @nodi/control-ui",
     "docs:check": "node scripts/check-docs.mjs",
     "manifests:check": "npm run build -w @nodi/sdk && node packages/sdk/dist/cli.js validate examples/hello-nodi/app.nodi.json && node packages/sdk/dist/cli.js validate catalog/bitcoin-node/app.nodi.json && node packages/sdk/dist/cli.js validate catalog/lottery-miner/app.nodi.json",
+    "scripts:check": "sh scripts/test-init.sh",
     "test": "npm run test -w @nodi/sdk && npm run test -w @nodi/api"
   },
   "engines": {

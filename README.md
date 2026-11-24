@@ -63,6 +63,21 @@ le datadir hôte choisi avec `BITCOIN_DATA_PATH`, ainsi que dans `store-data` et
 
 Consultez [le runbook](docs/RUNBOOK.md) avant une installation réelle.
 
+### Initialisation par script (fork `svax974`)
+
+`scripts/init.sh` prépare ou réadapte un boîtier selon l'état voulu : mode du
+nœud, mineur, écran, stockage. Sans option, c'est `--archive --miner --display`.
+
+```bash
+sudo ./scripts/init.sh                       # archive + mineur + écran
+sudo ./scripts/init.sh --pruned              # nœud pruned, sans mineur ni écran
+sudo ./scripts/init.sh --archive --display   # archive + écran, sans mineur
+```
+
+Le premier lancement nettoie d'abord l'ancien dispositif NOD-I
+(`scripts/cleanup-legacy-nodi.sh`). Relancer le script avec d'autres options
+adapte la configuration. Détails, stockage et limites : [guide d'initialisation](docs/INIT.md).
+
 Pour remettre d’abord le cockpit et le store en ligne sans démarrer Bitcoin ni
 monter un ancien disque, utilisez le
 [mode récupération](docs/RUNBOOK.md#mode-cockpit-seulement). C’est le mode

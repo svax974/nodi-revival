@@ -12,3 +12,5 @@ data/
 __pycache__/
 hardware/screen-agent/.venv/
 hardware/screen-agent/preview.png
+.nodi-init.state
+backups/
