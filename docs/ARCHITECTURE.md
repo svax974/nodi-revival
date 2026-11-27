@@ -67,6 +67,16 @@ database without changing the SDK contract.
 - `miner` profile: adds the lottery miner only after explicit configuration.
 - Hardware display: host systemd service, not part of the Docker failure domain.
 
+## Process supervision
+
+`services.bitcoin` runs with `init: true`, so `docker-init` (tini) is PID 1 and
+reaps orphaned processes. Without it the entrypoint's `exec bitcoind` makes
+`bitcoind` PID 1, and every healthcheck run (`sh -c bitcoin-cli`, every 30 s) is
+re-parented to a process that never calls `wait()`, accumulating zombies for the
+life of the container (448 after two days on the reference box). The other
+services do not need the flag: their PID 1 (`node`, `nginx`) already reaps its
+orphans, and the miner healthcheck only uses shell builtins.
+
 ## Version policy
 
 - Application manifests use `nodi.community/v1`.

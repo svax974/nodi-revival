@@ -6,6 +6,14 @@ services:
       context: .
       dockerfile: infrastructure/bitcoin/Dockerfile
     restart: unless-stopped
+    # `init: true` : docker-init (tini) devient PID 1 et recueille les orphelins.
+    # L'entrypoint fait `exec bitcoind`, donc bitcoind est PID 1 et n'appelle jamais
+    # wait() : chaque passage du healthcheck (`sh -c bitcoin-cli`, toutes les 30 s) lui
+    # est reparenté et reste zombie. Constaté le 27/11/2026 sur le boîtier : 448 zombies
+    # `bitcoin-cli` après 2 jours, dans le même PID namespace que l'hôte. Les autres
+    # services n'ont pas besoin de ce drapeau : leur PID 1 (node, nginx) recueille déjà
+    # ses orphelins, et le healthcheck du mineur n'utilise que des builtins du shell.
+    init: true
     environment:
       BITCOIN_RPC_USER: ${BITCOIN_RPC_USER:-nodi}
       BITCOIN_RPC_PASSWORD: ${BITCOIN_RPC_PASSWORD:?Run ./scripts/bootstrap.sh first}
